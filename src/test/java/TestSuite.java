@@ -1,17 +1,16 @@
 import com.aventstack.extentreports.ExtentReports;
 import com.aventstack.extentreports.ExtentTest;
 import com.aventstack.extentreports.reporter.ExtentHtmlReporter;
-import org.example.config.ConfigFactory;
 import com.inivos.util.BaseTest;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
-import io.appium.java_client.remote.AutomationName;
 import io.appium.java_client.remote.MobileCapabilityType;
 import org.example.config.ConfigFactory;
 import org.example.config.Constants;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.testng.annotations.*;
 import org.testng.log4testng.Logger;
+
 import java.net.URL;
 import java.util.concurrent.TimeUnit;
 
@@ -157,17 +156,17 @@ public class TestSuite extends BaseTest {
 //        //Views Image Switcher
 //        test.testImageSwitcher();
 //
-//        //Views ScrollBars Style
-//        test.testScrollBars();
+        //Views ScrollBars Style
+        test.testScrollBars();
 //
-        //Views Rating Bar
-        test.testRatingBar();
+//        //Views Rating Bar
+//        test.testRatingBar();
 //
 //        //Views Sliding Picker
 //        test.testSlidingPicker();
-
-        //Views Splitting Touches
-        test.testSplittingTouches();
+//
+//        //Views Splitting Touches
+//        test.testSplittingTouches();
     }
 
     @AfterClass

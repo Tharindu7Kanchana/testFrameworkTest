@@ -4,9 +4,7 @@ import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
 import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
-import io.appium.java_client.touch.TapOptions;
 import io.appium.java_client.touch.WaitOptions;
-import io.appium.java_client.touch.offset.ElementOption;
 import io.appium.java_client.touch.offset.PointOption;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
@@ -277,7 +275,6 @@ public class ViewTests {
         int subtrcated = ListElements.size();
 
         Assert.assertEquals(subtrcated,original);
-
     }
 
     @Test
@@ -300,28 +297,18 @@ public class ViewTests {
     }
 
     @Test
-    public void testScrollBars(){
+    public void testScrollBars() throws InterruptedException {
         //Opening Views ScrollBars Style Activity
         driver.startActivity(new Activity(PACKAGE,SCROLL_BARS_TEST));
 
-        AndroidElement ScrollView3 = (AndroidElement) driver.findElementById("io.appium.android.apis:id/view3");
-        new TouchAction<>(driver).press(PointOption.point(ScrollView3.getCenter().x,ScrollView3.getCenter().y +150))
-                .moveTo(PointOption.point(ScrollView3.getCenter().x, ScrollView3.getCenter().y - 100))
-                .release().perform();
+        AndroidElement ScrollView3 = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/view3","id");
+
+        AppiumTestSupport.swipeByPercentageOnElement(driver,ScrollView3,0.8,0.2,0.5,"Vertical",3000);
 
         AndroidElement startElement = (AndroidElement) driver.findElementByXPath("(//android.widget.TextView[@content-desc=\"Lorem ipsum dolor sit amet.\"])[4]");
         AndroidElement endElement = (AndroidElement) driver.findElementByXPath("(//android.widget.TextView[@content-desc=\"Lorem ipsum dolor sit amet.\"])[1]");
 
-
-        int startX = startElement.getLocation().getX() + (startElement.getSize().getWidth() / 2);
-        int startY = startElement.getLocation().getY() + (startElement.getSize().getHeight() / 2);
-        int endX = endElement.getLocation().getX() + (endElement.getSize().getWidth() / 2);
-        int endY = endElement.getLocation().getY() + (endElement.getSize().getHeight() / 2);
-        new TouchAction(driver)
-                .press(PointOption.point(startX,startY))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(3000)))
-                .moveTo(PointOption.point(endX, endY))
-                .release().perform();
+        AppiumTestSupport.swipeByElements(driver,startElement,endElement);
     }
 
     @Test

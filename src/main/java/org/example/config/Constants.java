@@ -5,7 +5,7 @@ public interface Constants {
      * Common properties ------------
      */
     String PLATFORM = "Android";
-    String APP_PATH = "app/ApiDemos-debug.apk";
+    //String APP_PATH = "app/ApiDemos-debug.apk";
     String APP_NAME = "ApiDemos-debug";
     String APPIUM_URL = "http://127.0.0.1:4723/wd/hub";
     Boolean AUTO_LAUNCH = true;

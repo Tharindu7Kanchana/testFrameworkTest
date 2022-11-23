@@ -79,6 +79,7 @@ public class TestSuite extends BaseTest {
             cap.setCapability(MobileCapabilityType.PLATFORM_NAME, constants.PLATFORM);
             cap.setCapability(MobileCapabilityType.PLATFORM_VERSION, constants.ANDROID_PLATFORM_VERSION);
             cap.setCapability(MobileCapabilityType.DEVICE_NAME, constants.ANDROID_DEVICE_NAME);
+            cap.setCapability("avd",constants.AVD);
             cap.setCapability("appActivity", constants.APP_ACTIVITY);
             cap.setCapability("appPackage", constants.APP_PACKAGE);
             cap.setCapability("autoLaunch", constants.AUTO_LAUNCH);
@@ -128,10 +129,10 @@ public class TestSuite extends BaseTest {
     @Test
     public void viewTests() throws InterruptedException {
         ViewTests test = new ViewTests(driver,"io.appium.android.apis");
-        //Views AutoComplete
-        //AutoComplete ScreenTop Test
-        test.testAutoCompleteScreenTop();
-        //AutoComplete Scroll Test
+//        //Views AutoComplete
+//        //AutoComplete ScreenTop Test
+//        test.testAutoCompleteScreenTop();
+//        //AutoComplete Scroll Test
 //        test.testAutoCompleteScroll();
 //        //AutoComplete Multiple Test
 //        test.testAutoCompleteMultiple();
@@ -154,16 +155,19 @@ public class TestSuite extends BaseTest {
 //        test.testExpandableList();
 //
 //        //Views Image Switcher
-        test.testImageSwitcher();
+//        test.testImageSwitcher();
 //
 //        //Views ScrollBars Style
 //        test.testScrollBars();
 //
-//        //Views Rating Bar
-//        test.testRatingBar();
+        //Views Rating Bar
+        test.testRatingBar();
 //
 //        //Views Sliding Picker
 //        test.testSlidingPicker();
+
+        //Views Splitting Touches
+        test.testSplittingTouches();
     }
 
     @AfterClass

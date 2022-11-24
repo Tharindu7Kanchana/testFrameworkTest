@@ -1,4 +1,6 @@
 import com.inivos.util.AppiumTestSupport;
+import com.inivos.util.ElementTestSupport;
+import io.appium.java_client.MultiTouchAction;
 import io.appium.java_client.TouchAction;
 import io.appium.java_client.android.Activity;
 import io.appium.java_client.android.AndroidDriver;
@@ -6,6 +8,7 @@ import io.appium.java_client.android.AndroidElement;
 import io.appium.java_client.android.nativekey.AndroidKey;
 import io.appium.java_client.touch.WaitOptions;
 import io.appium.java_client.touch.offset.PointOption;
+import org.aspectj.weaver.ast.And;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -33,6 +36,8 @@ public class ViewTests {
     private final String RATING_BAR_TEST = ".view.RatingBar1";
     private final String SLIDING_PICKER_TEST = ".view.CustomPicker1";
     private final String SPLITTING_TOUCH_TEST = ".view.SplitTouchView";
+    private final String SEEK_BAR_TEST = ".view.SeekBar1";
+    private final String ALERT_DIALOG_TEST = ".app.AlertDialogSamples";
     private final String PACKAGE;
 
     public ViewTests(AndroidDriver<?> driver, String packageName){
@@ -55,15 +60,15 @@ public class ViewTests {
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.S);
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.R);
 
-        int x = TextInput.getCenter().x;
-        int y = TextInput.getCenter().y + 100;
+        int x = AppiumTestSupport.getElementCenterX(TextInput);
+        int y = AppiumTestSupport.getElementCenterY(TextInput) + 100;
 
-        AppiumTestSupport.tapOnCoordinate(driver,new Point(x,y));
+        AppiumTestSupport.tapOnCoordinatePerform(driver,new Point(x,y));
 
         String actual = AppiumTestSupport.getElementText(TextInput);
         String expected = "Sri Lanka";
 
-        driver.hideKeyboard();
+        AppiumTestSupport.hideKeyboard(driver);
 
         Assert.assertEquals(actual,expected);
     }
@@ -75,20 +80,22 @@ public class ViewTests {
         //Scroll down to input
         AndroidElement ScrollView = AppiumTestSupport.locateElement(driver,"//android.widget.ScrollView","xpath");
 
-        int stx = ScrollView.getCenter().x;
-        int sty = ScrollView.getCenter().y + 600;
-        int enx = ScrollView.getCenter().x;
-        int eny = ScrollView.getCenter().y - 600;
+//        int stx = ScrollView.getCenter().x;
+//        int sty = ScrollView.getCenter().y + 600;
+//        int enx = ScrollView.getCenter().x;
+//        int eny = ScrollView.getCenter().y - 600;
+//
+//        AppiumTestSupport.swipeByCoordinate(driver,new Point(stx,sty),new Point(enx,eny));
 
-        AppiumTestSupport.swipeByCoordinate(driver,new Point(stx,sty),new Point(enx,eny));
+        AppiumTestSupport.swipeByPercentageOnElementPerform(driver,ScrollView,0.98,0.02,0.5,"Vertical",3000);
 
         AndroidElement TextInput = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/edit","id");
-        AppiumTestSupport.pressOnElement(driver,TextInput);
+        AppiumTestSupport.pressOnElementPerform(driver,TextInput);
 
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.S);
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.R);
 
-        AppiumTestSupport.tapOnCoordinate(driver,new Point(TextInput.getCenter().getX(),TextInput.getCenter().getY() -100));
+        AppiumTestSupport.tapOnCoordinatePerform(driver,new Point(AppiumTestSupport.getElementCenterX(TextInput),AppiumTestSupport.getElementCenterY(TextInput) -100));
         String actual = TextInput.getText();
         String expected = "Sri Lanka";
 
@@ -107,14 +114,14 @@ public class ViewTests {
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.S);
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.R);
 
-        int x = TextInput.getCenter().x;
-        int y = TextInput.getCenter().y + 100;
-        AppiumTestSupport.tapOnCoordinate(driver,new Point(x,y));
+        int x = AppiumTestSupport.getElementCenterX(TextInput);
+        int y = AppiumTestSupport.getElementCenterY(TextInput) + 100;
+        AppiumTestSupport.tapOnCoordinatePerform(driver,new Point(x,y));
 
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.U);
         AppiumTestSupport.pressAndroidKey(driver,AndroidKey.N);
 
-        AppiumTestSupport.tapOnCoordinate(driver,new Point(x,y));
+        AppiumTestSupport.tapOnCoordinatePerform(driver,new Point(x,y));
 
         AppiumTestSupport.hideKeyboard(driver);
 
@@ -131,7 +138,7 @@ public class ViewTests {
 
         AndroidElement ToggleButton = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/button_toggle","id");
         String text = AppiumTestSupport.getElementText(ToggleButton);
-        ToggleButton.click();
+        AppiumTestSupport.buttonClick(ToggleButton);
         String text1 = AppiumTestSupport.getElementText(ToggleButton);
 
         if(text.equals("ON")) {
@@ -152,8 +159,8 @@ public class ViewTests {
         AndroidElement ChronometerStart = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/start","id");
         AndroidElement ChronometerStop = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/stop","id");
 
-        AppiumTestSupport.tapOnElement(driver,ChronometerStart,5000);
-        AppiumTestSupport.tapOnElement(driver,ChronometerStop);
+        AppiumTestSupport.tapOnElementPerform(driver,ChronometerStart,5000);
+        AppiumTestSupport.tapOnElement(driver,ChronometerStop).perform();
 
 //        new TouchAction<>(driver).tap(TapOptions.tapOptions()
 //                        .withElement(ElementOption.element(ChronometerStart)))
@@ -165,8 +172,7 @@ public class ViewTests {
 
         Assert.assertEquals(text,"0006");
 
-        AndroidElement ChronometerResetButton = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/reset","id");
-        ChronometerResetButton.click();
+        AppiumTestSupport.buttonClick(driver,"io.appium.android.apis:id/reset","id");
 
         text = ChronometerText.getText().replaceAll("[^\\d]","");
 
@@ -199,7 +205,7 @@ public class ViewTests {
         //Change Date Test
         AppiumTestSupport.buttonClick(DatePicker);
         String month = today.getMonth().name();
-        int newDay = today.getDayOfMonth() + 7;
+        int newDay = today.getDayOfMonth() + 5;
         String ContentDesc = newDay + " " + month.substring(0,1) + month.substring(1).toLowerCase() + " " + today.getYear();
         String ContentDescFormatted = today.getMonthValue() + "/" + newDay + "/" + today.getYear();
         //Select Date
@@ -225,11 +231,11 @@ public class ViewTests {
         //Change Time Test
 
         TimePicker.click();
-        AppiumTestSupport.locateElement(driver,"android:id/hours","id").click();
-        AppiumTestSupport.locateElement(driver,"9","AccessibilityId").click();
-        AppiumTestSupport.locateElement(driver,"android:id/minutes","id").click();
-        AppiumTestSupport.locateElement(driver,"45","AccessibilityId").click();
-        AppiumTestSupport.locateElement(driver,"android:id/button1","id").click();
+        AppiumTestSupport.buttonClick(driver,"android:id/hours","id");
+        AppiumTestSupport.buttonClick(driver,"9","AccessibilityId");
+        AppiumTestSupport.buttonClick(driver,"android:id/minutes","id");
+        AppiumTestSupport.buttonClick(driver,"45","AccessibilityId");
+        AppiumTestSupport.buttonClick(driver,"android:id/button1","id");
 
         //Time Text
 //        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("io.appium.android.apis:id/dateDisplay")));
@@ -245,10 +251,11 @@ public class ViewTests {
         //Opening Views Drag and drop Activity
         driver.startActivity(new Activity(PACKAGE,DRAGDROP_TEST));
 
-        AndroidElement dot1 = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/drag_dot_1","id");
-        AndroidElement dot2 = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/drag_dot_2","id");
-
-        AppiumTestSupport.dragNDrop(driver,dot1,dot2);
+//        AndroidElement dot1 = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/drag_dot_1","id");
+//        AndroidElement dot2 = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/drag_dot_2","id");
+//
+//        AppiumTestSupport.dragNDrop(driver,dot1,dot2);
+        AppiumTestSupport.dragNDrop(driver,"io.appium.android.apis:id/drag_dot_1","id","io.appium.android.apis:id/drag_dot_2","id");
         String result = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/drag_result_text","id").getText();
 
         Assert.assertEquals(result,"Dropped!");
@@ -285,15 +292,18 @@ public class ViewTests {
         //Image Gallery
         AndroidElement Gallery = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/gallery","id");
 
-        AppiumTestSupport.swipeByPercentage(driver,0.9,0.4,0.98,"Horizontal",1000);
-//        //ImageView
-//        AndroidElement Image4 = com.inivos.util.AppiumTestSupport.locateElement(driver,"//android.widget.Gallery/android.widget.ImageView[4]","xpath");
-//
-//        com.inivos.util.AppiumTestSupport.tapOnElement(driver, Image4);
-//
-//        Image4 = com.inivos.util.AppiumTestSupport.locateElement(driver,"//android.widget.Gallery/android.widget.ImageView[5]","xpath");
-//
-//        com.inivos.util.AppiumTestSupport.tapOnElement(driver, Image4);
+        AppiumTestSupport.swipeByPercentagePerform(driver,0.9,0.4,0.98,"Horizontal",1000);
+        //ImageView
+        AndroidElement Image4 = AppiumTestSupport.locateElement(driver,"//android.widget.Gallery/android.widget.ImageView[4]","xpath");
+
+        AppiumTestSupport.tapOnElement(driver, Image4).perform();
+
+        Image4 = AppiumTestSupport.locateElement(driver,"//android.widget.Gallery/android.widget.ImageView[5]","xpath");
+
+        AppiumTestSupport.tapOnElement(driver, Image4).perform();
+
+        AppiumTestSupport.swipeByPercentagePerform(driver,0.9,0.4,0.98,"Horizontal",1000);
+
     }
 
     @Test
@@ -303,12 +313,12 @@ public class ViewTests {
 
         AndroidElement ScrollView3 = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/view3","id");
 
-        AppiumTestSupport.swipeByPercentageOnElement(driver,ScrollView3,0.8,0.2,0.5,"Vertical",3000);
+        AppiumTestSupport.swipeByPercentageOnElementPerform(driver,ScrollView3,0.8,0.2,0.5,"Vertical",3000);
 
-        AndroidElement startElement = (AndroidElement) driver.findElementByXPath("(//android.widget.TextView[@content-desc=\"Lorem ipsum dolor sit amet.\"])[4]");
-        AndroidElement endElement = (AndroidElement) driver.findElementByXPath("(//android.widget.TextView[@content-desc=\"Lorem ipsum dolor sit amet.\"])[1]");
+        AndroidElement startElement = AppiumTestSupport.locateElement(driver,"(//android.widget.TextView[@content-desc=\"Lorem ipsum dolor sit amet.\"])[4]","xpath");
+        AndroidElement endElement = AppiumTestSupport.locateElement(driver,"(//android.widget.TextView[@content-desc=\"Lorem ipsum dolor sit amet.\"])[1]","xpath");
 
-        AppiumTestSupport.swipeByElements(driver,startElement,endElement);
+        AppiumTestSupport.swipeByElementsPerform(driver,startElement,endElement);
     }
 
     @Test
@@ -326,7 +336,7 @@ public class ViewTests {
         double height = AppiumTestSupport.getScreenHeight(driver);
         double AnchorPerc = y/height;
 
-        AppiumTestSupport.swipeByPercentage(driver,StartPerc,EndPerc,AnchorPerc,"Horizontal",3000);
+        AppiumTestSupport.swipeByPercentagePerform(driver,StartPerc,EndPerc,AnchorPerc,"Horizontal",3000);
 
         AndroidElement RatingText = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/rating","id");
         String Actual = RatingText.getText().split(":")[1].trim().split("/")[0];
@@ -336,27 +346,20 @@ public class ViewTests {
     }
 
     @Test
-    public void testSlidingPicker(){
+    public void testSlidingPicker() throws InterruptedException {
         //Opening S
         driver.startActivity(new Activity(PACKAGE,SLIDING_PICKER_TEST));
 
-        AndroidElement Picker = (AndroidElement) driver.findElementById("android:id/numberpicker_input");
+        AndroidElement Picker = AppiumTestSupport.locateElement(driver,"android:id/numberpicker_input","id");
 
         int startY = Picker.getCenter().getY() + 200;
         int x = Picker.getCenter().getY();
         int endY = Picker.getCenter().getY() - 200;
-        new TouchAction(driver)
-                .press(PointOption.point(x,startY))
-                .waitAction(WaitOptions.waitOptions(Duration.ofMillis(1000)))
-                .moveTo(PointOption.point(x, endY))
-                .release().perform();
+        AppiumTestSupport.swipeByCoordinatePerform(driver,new Point(x,startY),new Point(x,endY),1000);
 
-        WebDriverWait wait = new WebDriverWait(driver,19);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("io.appium.android.apis:id/textView1")));
+        AndroidElement PickerText = AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/textView1","id");
 
-        AndroidElement PickerText = (AndroidElement) driver.findElementById("io.appium.android.apis:id/textView1");
-
-        Assert.assertNotNull(PickerText.getText());
+        Assert.assertNotNull(AppiumTestSupport.getElementText(PickerText));
     }
 
     @Test
@@ -374,7 +377,29 @@ public class ViewTests {
 
         Thread.sleep(2000);
 
-        AppiumTestSupport.swipeByPercentage(driver,0.85,0.25,0.2,"Vertical",500);
-        AppiumTestSupport.swipeByPercentage(driver,0.85,0.25,0.8,"Vertical",500);
+        TouchAction swipe1 = AppiumTestSupport.swipeByPercentage(driver,0.85,0.25,0.2,"Vertical");
+        TouchAction swipe2 = AppiumTestSupport.swipeByPercentage(driver,0.85,0.25,0.8,"Vertical");
+        AppiumTestSupport.multipleTouchAction(driver, new TouchAction[]{swipe1, swipe2});
+        swipe1.perform();
+        swipe2.perform();
+
+    }
+
+    @Test
+    public void testSeekBar() throws InterruptedException {
+        ElementTestSupport.testSeekBar(driver,PACKAGE,SEEK_BAR_TEST,"io.appium.android.apis:id/seek","id","Horizontal",0.78);
+
+        String text = AppiumTestSupport.getElementText(AppiumTestSupport.locateElement(driver,"io.appium.android.apis:id/progress","id")).split(" ")[0];
+
+        Assert.assertEquals(text,"80");
+    }
+
+    @Test
+    public void testAlertDialog() throws InterruptedException {
+
+        driver.startActivity(new Activity(PACKAGE,ALERT_DIALOG_TEST));
+
+        AppiumTestSupport.buttonClick(driver,"io.appium.android.apis:id/two_buttons","id");
+        AppiumTestSupport.buttonClick(driver,"android:id/button1","id");
     }
 }

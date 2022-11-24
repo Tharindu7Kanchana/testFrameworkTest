@@ -21,6 +21,7 @@ public interface Constants {
     String ANDROID_DEVICE_NAME ="emulator-5554";
     String AVD = "Pixel_2_API_30";
     String AUTOMATION_NAME = "UIAutomator2";
+
     /**
      * IOS properties ------------
      */

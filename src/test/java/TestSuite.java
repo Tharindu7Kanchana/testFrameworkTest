@@ -156,17 +156,23 @@ public class TestSuite extends BaseTest {
 //        //Views Image Switcher
 //        test.testImageSwitcher();
 //
-        //Views ScrollBars Style
-        test.testScrollBars();
+//        //Views ScrollBars Style
+//        test.testScrollBars();
 //
 //        //Views Rating Bar
 //        test.testRatingBar();
 //
 //        //Views Sliding Picker
 //        test.testSlidingPicker();
-//
-//        //Views Splitting Touches
-//        test.testSplittingTouches();
+
+        //Views Splitting Touches
+        test.testSplittingTouches();
+
+        //Views Seek Bar
+        test.testSeekBar();
+
+        //Alert Dialog
+        test.testAlertDialog();
     }
 
     @AfterClass
